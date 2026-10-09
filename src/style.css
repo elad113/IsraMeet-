@@ -72,3 +72,38 @@ textarea{font:inherit;color:#f1f6ff;background:#0d1b32;border:1px solid #2d4365;
 .floating-request button{align-self:flex-start;padding:8px 14px;border:0;border-radius:10px;background:#7789ff;color:#071329;font-weight:800}
 .room-top{gap:8px;flex-wrap:wrap}
 @media(max-width:420px){.underbar{gap:0}.nav-item{min-width:44px;padding-inline:5px}.nav-item small{font-size:10px}.room-tools{gap:7px}.room-tools button{min-width:66px}}
+
+
+/* IsraMeet refreshed motion system, replay player and invitation sheet */
+:root{scroll-behavior:smooth}
+button,.feature,.meeting-card,.settings-list button,.nav-item{transition:transform .18s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease}
+button:active{transform:scale(.975)}
+.primary,.secondary,.outline{border-radius:16px}
+.primary{box-shadow:0 8px 24px rgba(93,133,255,.2)}
+.primary:hover,.secondary:hover,.outline:hover,.feature:hover{box-shadow:0 12px 28px rgba(67,115,255,.18);transform:translateY(-2px)}
+.meeting-card{animation:meet-card-in .32s ease both}
+.feature{animation:meet-card-in .38s ease both}
+.feature:nth-child(2){animation-delay:.035s}.feature:nth-child(3){animation-delay:.07s}.feature:nth-child(4){animation-delay:.105s}
+@keyframes meet-card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.recording-title{border:0;background:transparent;color:#eef3ff;text-align:right;padding:0;font:inherit;font-weight:800;cursor:pointer}
+.recording-player-page{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+.recording-screen{position:relative;background:#02050b;border-radius:24px;overflow:hidden;aspect-ratio:16/9;min-height:220px;display:grid;place-items:center;box-shadow:0 22px 55px #0007;border:1px solid #ffffff20}
+.recording-screen video{width:100%;height:100%;max-height:72vh;object-fit:contain;background:#02050b}
+.recording-screen-overlay{position:absolute;inset:0 0 auto 0;display:flex;align-items:center;justify-content:space-between;padding:12px;background:linear-gradient(#0009,transparent);pointer-events:none}
+.recording-screen-overlay span{font-size:12px;font-weight:800;letter-spacing:.08em;color:#fff}
+.recording-screen-overlay button{pointer-events:auto;border:1px solid #ffffff40;border-radius:11px;background:#071329c9;color:#fff;padding:8px 11px}
+.player-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:16px}
+.player-controls #player-clock{font-variant-numeric:tabular-nums;color:#c4d2eb;font-size:13px;min-width:88px;text-align:center}
+.recording-timeline{display:block;width:100%;margin:18px 0 8px;accent-color:#8c9aff;cursor:pointer}
+.player-help{font-size:13px;color:var(--muted);text-align:center}
+.invite-scrim{position:fixed;z-index:2000;inset:0;background:#020713c9;backdrop-filter:blur(12px);display:grid;place-items:center;padding:20px;animation:invite-fade .2s ease}
+.invite-dialog{width:min(100%,420px);border:1px solid #8da1ff55;border-radius:28px;padding:24px;background:linear-gradient(155deg,#152b4e,#09162c);box-shadow:0 28px 90px #000a;animation:invite-rise .28s cubic-bezier(.2,.8,.2,1)}
+.invite-dialog h2{margin:10px 0 6px;font-size:25px}.invite-dialog>p{margin:0 0 16px;color:#b5c4dd}
+.invite-icon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,#7894ff,#54d9ed);color:#061329}
+.invite-summary{display:flex;flex-direction:column;gap:7px;padding:16px;margin:16px 0;border-radius:18px;background:#ffffff08;border:1px solid #ffffff16}
+.invite-summary b{font-size:17px}.invite-summary span,.invite-summary small{color:#b4c5df}
+.invite-dialog .full+.full{margin-top:10px}
+.delete-meeting{color:#ffb0bb;border-color:#ff6e852b}
+.player-fullscreen{font-size:12px}
+@keyframes invite-fade{from{opacity:0}to{opacity:1}}@keyframes invite-rise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
