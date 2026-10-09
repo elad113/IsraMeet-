@@ -13,7 +13,8 @@
     "@capacitor/local-notifications": "^7.0.2",
     "@capacitor/share": "^7.0.2",
     "peerjs": "^1.5.4",
-    "@capacitor/app": "^7.0.1"
+    "@capacitor/app": "^7.0.1",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.4.3",
