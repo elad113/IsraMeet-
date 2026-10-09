@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
       - name: Install dependencies
         run: npm install
       - name: Build web app
@@ -24,6 +23,8 @@ jobs:
         run: npx cap add android
       - name: Sync Android
         run: npx cap sync android
+      - name: Add exact-alarm permission
+        run: sed -i '/<application/i\\    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />' android/app/src/main/AndroidManifest.xml
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
