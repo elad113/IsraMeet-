@@ -96,3 +96,4 @@ jobs:
           name: IsraMeet-Android-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+# Trigger rebuild for the latest IsraMeet UI and media fixes.
