@@ -225,3 +225,27 @@ button:active{transform:scale(.975)}
 .page>*:nth-child(2){animation-delay:.035s}.page>*:nth-child(3){animation-delay:.07s}.page>*:nth-child(4){animation-delay:.105s}
 @media(max-width:420px){.page{padding-inline:14px}.hero{border-radius:24px;padding:22px 19px}.feature-grid{gap:10px}.feature{padding:14px;min-height:138px}.meeting-card{padding:12px}.nav-item small{font-size:9px}}
 
+
+
+/* Meeting focus: prioritize live video, keep the feature controls in their own scroll area */
+.room-page{width:100%;max-width:1100px;height:calc(100dvh - 72px);min-height:0;margin:0 auto;padding:8px 12px 20px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;overscroll-behavior:contain}
+.room-top{flex:0 0 auto;margin:0;min-height:28px}
+.room-status{flex:0 0 auto;margin:0;padding:5px 9px;min-height:0;max-height:28px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px}
+.video-grid{flex:0 0 auto;height:clamp(250px,calc(100dvh - 245px),650px);min-height:250px;align-content:stretch;grid-auto-rows:minmax(0,1fr);gap:10px!important;margin:0!important;padding:2px!important;overflow:hidden}
+.video-tile{min-height:0!important;height:100%;aspect-ratio:auto!important;border-radius:18px!important}
+.video-tile video{min-height:0}
+.room-tools{flex:0 0 auto;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-rows:67px;gap:7px!important;max-height:91px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;padding:7px!important;margin:0!important;border-radius:18px!important;align-content:start}
+.room-tools button{min-width:0!important;width:100%;min-height:60px!important;height:60px;padding:5px 2px!important;gap:4px!important;scroll-snap-align:start}
+.room-tools button span{width:27px;height:27px;font-size:18px!important;margin:0!important}
+.room-tools button small{font-size:10px!important;line-height:1.1}
+.room-chat-panel,.participant-actions,.room-notice,.room-page>.danger{flex:0 0 auto}
+.room-notice{margin:0 0 4px}
+.live-captions{transition:opacity .35s ease}
+@media(max-width:420px){
+ .room-page{height:calc(100dvh - 72px);padding:6px 8px 16px;gap:6px}
+ .video-grid{height:clamp(235px,calc(100dvh - 238px),620px);min-height:235px;gap:7px!important}
+ .video-tile{border-radius:15px!important}
+ .room-tools{grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-rows:63px;max-height:84px;gap:5px!important;padding:6px!important}
+ .room-tools button{height:57px;min-height:57px!important}
+ .room-tools button small{font-size:9px!important}
+}
