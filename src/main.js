@@ -101,7 +101,7 @@ case'mic':if(!localStream){toast('הפעל מצלמה ומיקרופון בכנ�
 case'test-camera':activeMeeting={id:'test',title:'בדיקת מצלמה',code:'TEST01'};startRoom(activeMeeting,true);break;case'permissions':try{const test=await navigator.mediaDevices.getUserMedia({video:true,audio:true});test.getTracks().forEach(track=>track.stop());let p=await LocalNotifications.checkPermissions();if(p.display!=='granted')p=await LocalNotifications.requestPermissions();toast('הרשאות מצלמה ומיקרופון נבדקו'+(p.display==='granted'?' · התראות מאושרות':''))}catch(err){toast('אין הרשאה למדיה: '+err.message)}break;
 case'save-settings':settings.camera=$('[name=camera]').checked;settings.mic=$('[name=mic]').checked;settings.notifications=$('[name=notifications]').checked;save('isrameet.settings',settings);toast('ההגדרות נשמרו');tab='פרופיל';go('home');break;case'privacy':toast('החשבון וההקלטות נשמרים מקומית במכשיר.');break;
 }});
-async async function startDomScreenRecording(){
+async function startDomScreenRecording(){
 if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){toast('הקלטת מסך אינה נתמכת במכשיר הזה');return}
 const canvas=document.createElement('canvas'),width=Math.max(1,window.innerWidth),height=Math.max(1,window.innerHeight);canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d');let active=true,busy=false;const audioCtx=window.AudioContext?new AudioContext():null,audioDest=audioCtx?.createMediaStreamDestination();
 if(audioCtx&&audioDest){const streams=[localStream,...remoteStreams.values()].filter(Boolean);streams.forEach(st=>st.getAudioTracks().filter(t=>t.readyState==='live'&&t.enabled).forEach(track=>{try{audioCtx.createMediaStreamSource(new MediaStream([track])).connect(audioDest)}catch{}}));try{await audioCtx.resume()}catch{}}
