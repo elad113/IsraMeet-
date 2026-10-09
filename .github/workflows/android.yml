@@ -23,6 +23,26 @@ jobs:
         run: npx cap add android
       - name: Sync Android
         run: npx cap sync android
+      - name: Register IsraMeet invitation deep links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("android/app/src/main/AndroidManifest.xml")
+          s = p.read_text()
+          intent = """        <intent-filter>
+                      <action android:name="android.intent.action.VIEW" />
+                      <category android:name="android.intent.category.DEFAULT" />
+                      <category android:name="android.intent.category.BROWSABLE" />
+                      <data android:scheme="isrameet" android:host="invite" />
+                  </intent-filter>
+          """
+          if 'android:scheme="isrameet"' not in s:
+              pos = s.find("</activity>")
+              if pos < 0:
+                  raise SystemExit("MainActivity declaration not found")
+              s = s[:pos] + intent + s[pos:]
+              p.write_text(s)
+          PY
       - name: Add notification icon and permissions
         run: |
           mkdir -p android/app/src/main/res/drawable
