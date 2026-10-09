@@ -1,29 +1,39 @@
-# IsraMeet — rebuilt Android source
+# IsraMeet Android
 
-This repository is now the active source baseline for IsraMeet, reconstructed from the latest available reference APK (com.isrameet.app, app name IsraMeet).
+IsraMeet is a Hebrew RTL Android/WebView meeting app project built with Vite and Capacitor.
 
-## What is included
+## Current implementation
 
-- Hebrew RTL mobile UI with the five bottom navigation destinations: בית, פגישות, יומן, הודעות, פרופיל.
-- Home, meeting list, calendar, profile, create/join/schedule flows, and a meeting-room screen.
-- Local persistence for meetings and profile using device storage.
-- Capacitor local-notification scheduling for future meetings and notification-tap navigation into the matching meeting.
-- Android APK build workflow in GitHub Actions.
+- Animated IsraMeet letter-by-letter splash screen.
+- Home, meetings list, calendar, messages, profile and settings screens.
+- Create a room and share its meeting code; schedule a meeting with a local Android notification.
+- Camera/microphone access and live local camera preview.
+- PeerJS/WebRTC room signaling and audio/video calls through a host room code; participants use the same code and the host must remain online.
+- Meeting chat relayed through the room host.
+- Local meeting recording via MediaRecorder, download, and IndexedDB storage on the device.
+- Local profile registration/login, with a hashed password stored on the device.
+- Android camera, microphone, notification and alarm permissions.
+- Custom notification icon and three-second generated notification sound.
+- Two bottom-bar shortcuts: create meeting and join meeting.
 
-## Build an APK
+## Build the APK
 
-1. Open the Actions tab in this repository.
+1. Open **Actions**.
 2. Select **Build IsraMeet Android APK**.
-3. Run the workflow or push a change to main.
-4. Download the IsraMeet-Android-APK artifact from a successful run.
+3. Wait for a successful run.
+4. Download `IsraMeet-Android-APK` from the run's Artifacts section.
 
-The workflow generates the Android platform from Capacitor and builds a debug APK. It does not commit generated Android build outputs to source control.
+The artifact is a debug APK for testing.
 
-## Accuracy and limitations
+## Important limitations
 
-The original APK contains compiled/minified JavaScript and CSS rather than the original editable project. This repository reconstructs the main UI and app flows from that reference; it is **not a byte-for-byte or fully feature-equivalent copy**. The current meeting room provides the UI shell, but live multi-device audio/video, server-backed accounts/chat, real screen broadcasting, and host-controlled meeting features require backend/media services that were not recoverable from the APK alone. Scheduled notifications depend on Android notification permissions and device power-management behavior.
+- Account registration is currently device-local. It does not create cloud users or a shared user database. A production multi-user database/auth system requires a configured backend (for example, Supabase/Firebase) and credentials/secrets.
+- Live calling depends on internet access, Android camera/microphone permissions, and the PeerJS public signaling service. Network/firewall/NAT conditions may prevent calls. Test on two real devices.
+- The host must start the room before others join. The host acts as a relay for participant discovery and chat.
+- Screen capture depends on Android/WebView support and user-granted system permissions.
+- Recording is saved in the app's local IndexedDB and a downloaded WebM file. Browser/WebView storage can be cleared by Android or the user. Obtain consent before recording.
+- This is a reconstruction from a compiled reference APK, not the original source. It cannot guarantee every feature from the older app is restored without the original backend and source.
 
-## Reference
+## Repository
 
-- Latest reference APK was extracted from the GitHub Actions artifact in elad113/Vicationfly-Android; the APK's internal app identity is com.isrameet.app.
-- Active source repository: https://github.com/elad113/IsraMeet-
+https://github.com/elad113/IsraMeet-
