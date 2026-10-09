@@ -178,3 +178,50 @@ input,textarea,select{border-radius:14px!important}
 @keyframes dialog-enter{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(min-width:600px){.room-tools{grid-template-columns:repeat(6,minmax(0,1fr))}.page{max-width:820px;margin-inline:auto}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+/* IsraMeet visual refresh — cohesive spacing, calmer contrast, tactile motion */
+:root{--bg:#07101f;--panel:#101d31;--panel2:#172943;--muted:#9aacc5;--blue:#7bb2ff;--cyan:#63e5e8;--purple:#9a8cff;--line:rgba(167,194,231,.16);scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 12% -8%,rgba(91,126,255,.16),transparent 34%),radial-gradient(ellipse at 100% 20%,rgba(49,204,221,.07),transparent 30%),var(--bg);letter-spacing:.05px}
+button,.meeting-card,.feature,.home-tool,.video-tile,.settings-list button,.round-action,.nav-item{transition:transform .18s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease,opacity .2s ease}
+button:active{transform:scale(.975)}
+.topbar{height:72px;padding-inline:clamp(16px,4vw,28px);border-bottom-color:rgba(167,194,231,.12);background:rgba(7,16,31,.88)}
+.brand-mark{border-radius:15px;background:linear-gradient(135deg,#5fa8ff,#8e76ff 72%,#61dfe3);box-shadow:0 8px 28px rgba(100,137,255,.26)}
+.icon-btn{background:rgba(21,39,64,.82);border-color:rgba(167,194,231,.18);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.page{max-width:900px;padding:24px clamp(16px,4vw,28px) 124px}
+.hero{min-height:315px;padding:clamp(23px,4vw,34px);border-radius:30px;border-color:rgba(135,173,255,.22);background:linear-gradient(135deg,rgba(25,48,79,.98),rgba(16,29,53,.98) 56%,rgba(38,33,78,.96));box-shadow:0 18px 50px rgba(0,0,0,.15)}
+.hero h1{font-size:clamp(27px,4vw,34px);line-height:1.25;max-width:390px;letter-spacing:-.7px}
+.hero p{max-width:390px;line-height:1.8}
+.eyebrow{letter-spacing:.2px}
+.primary{background:linear-gradient(115deg,#62aaff,#8a78ff);box-shadow:0 8px 24px rgba(101,132,255,.25);transition:transform .18s ease,filter .2s ease,box-shadow .2s ease}
+.primary:hover{filter:brightness(1.08);box-shadow:0 10px 30px rgba(101,132,255,.35);transform:translateY(-1px)}
+.secondary,.outline{border-radius:14px}
+.section-head{margin-top:30px;margin-bottom:15px}
+.section-head h2{font-size:19px;letter-spacing:-.25px}
+.feature-grid{gap:14px}
+.feature{min-height:146px;padding:18px;border-radius:22px;background:linear-gradient(150deg,rgba(20,39,66,.95),rgba(12,26,46,.98));border-color:rgba(167,194,231,.13);box-shadow:0 7px 20px rgba(0,0,0,.07)}
+.feature:hover,.home-tool:hover{transform:translateY(-3px);border-color:rgba(123,178,255,.35);box-shadow:0 14px 30px rgba(0,0,0,.16)}
+.feature-icon{width:42px;height:42px;border-radius:14px}
+.meeting-card{border-radius:21px;padding:16px;background:linear-gradient(125deg,rgba(19,39,66,.96),rgba(13,27,47,.98));border-color:rgba(167,194,231,.14);box-shadow:0 5px 18px rgba(0,0,0,.06)}
+.meeting-card:hover{transform:translateY(-2px);border-color:rgba(123,178,255,.3)}
+.meeting-symbol{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,rgba(107,166,255,.2),rgba(139,120,255,.15));color:#a8caff}
+.empty-card,.calendar-card,.profile-card,.settings-list{border-radius:23px;border-color:rgba(167,194,231,.15);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.underbar{min-height:78px;padding-inline:clamp(8px,3vw,22px);background:rgba(7,16,31,.93);border-top-color:rgba(167,194,231,.14);box-shadow:0 -10px 32px rgba(0,0,0,.14)}
+.nav-item{border-radius:17px;padding:7px 8px}
+.nav-item.selected{color:#b1ceff;background:linear-gradient(135deg,rgba(107,166,255,.15),rgba(139,120,255,.12));box-shadow:inset 0 0 0 1px rgba(123,178,255,.12)}
+.nav-item.selected span{filter:drop-shadow(0 0 8px rgba(107,166,255,.3))}
+.room-top,.room-status{border-radius:16px}
+.room-tools button{border-radius:16px;transition:transform .18s ease,background .2s ease,border-color .2s ease}
+.room-tools button:hover{background:rgba(107,166,255,.12);border-color:rgba(123,178,255,.28);transform:translateY(-2px)}
+.video-grid{gap:12px}
+.video-tile{border-radius:23px;overflow:hidden;border:1px solid rgba(167,194,231,.18);box-shadow:0 10px 26px rgba(0,0,0,.16);animation:tile-arrive .28s ease both}
+.video-tile:hover{border-color:rgba(123,178,255,.4)}
+.tile-label{backdrop-filter:blur(12px)}
+.room-chat-panel{border:1px solid rgba(167,194,231,.18);border-radius:23px;box-shadow:0 20px 55px rgba(0,0,0,.25)}
+.participant-row,.library-card{border-radius:17px}
+.toast,#toast{backdrop-filter:blur(18px)}
+.live-captions{border:1px solid rgba(255,255,255,.18);box-shadow:0 12px 34px rgba(0,0,0,.28)}
+@keyframes isrameet-rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.page>*{animation:isrameet-rise .32s ease both}
+.page>*:nth-child(2){animation-delay:.035s}.page>*:nth-child(3){animation-delay:.07s}.page>*:nth-child(4){animation-delay:.105s}
+@media(max-width:420px){.page{padding-inline:14px}.hero{border-radius:24px;padding:22px 19px}.feature-grid{gap:10px}.feature{padding:14px;min-height:138px}.meeting-card{padding:12px}.nav-item small{font-size:9px}}
+
