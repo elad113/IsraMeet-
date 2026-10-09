@@ -30,7 +30,8 @@ The artifact is a debug APK for testing.
 - Account registration is currently device-local. It does not create cloud users or a shared user database. A production multi-user database/auth system requires a configured backend (for example, Supabase/Firebase) and credentials/secrets.
 - Live calling depends on internet access, Android camera/microphone permissions, and the PeerJS public signaling service. Network/firewall/NAT conditions may prevent calls. Test on two real devices.
 - The host must start the room before others join. The host acts as a relay for participant discovery and chat.
-- Screen capture depends on Android/WebView support and user-granted system permissions.
+- Full-screen recording requires Android/WebView `getDisplayMedia` support and user-granted system permissions. Some Android WebViews do not expose this API, in which case the app reports that screen recording is unavailable.
+- Custom-scheme invite links require IsraMeet to be installed; these are not web universal links. A cloud-hosted invitation landing page would be needed for automatic install/open behavior on devices without the app.
 - Recording is saved in the app's local IndexedDB and a downloaded WebM file. Browser/WebView storage can be cleared by Android or the user. Obtain consent before recording.
 - This is a reconstruction from a compiled reference APK, not the original source. It cannot guarantee every feature from the older app is restored without the original backend and source.
 
