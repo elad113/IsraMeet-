@@ -131,3 +131,50 @@ button:active{transform:scale(.975)}
 .library-actions{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 18px}.library-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.library-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:10px;border-radius:18px;border:1px solid #ffffff18;background:#ffffff08}.library-card img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#050b16;border-radius:12px}.library-card b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-card>div{display:flex;flex-direction:column;gap:7px}.library-card button{min-height:36px;padding:0 10px;font-size:12px}
 .camera-capture-scrim{align-items:center}.camera-capture-scrim section{display:flex;flex-direction:column;gap:12px}.camera-capture-scrim video{width:100%;max-height:55vh;object-fit:contain;border-radius:16px;background:#000}.camera-capture-scrim h3{margin:0}
 @media(min-width:650px){.participants-scrim,.library-scrim{align-items:center}.participants-sheet,.library-sheet{border-radius:26px}.library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* IsraMeet polish pass: generous spacing, icon-forward controls, layered surfaces and motion */
+:root{--bg:#070d1d;--panel:#101b31;--panel2:#162641;--line:rgba(173,197,238,.17);--blue:#7aa7ff;--cyan:#67e8f9;--purple:#b09aff}
+body{background:radial-gradient(ellipse at 8% -10%,rgba(72,111,219,.18),transparent 42%),radial-gradient(ellipse at 100% 0%,rgba(139,92,246,.12),transparent 36%),var(--bg);letter-spacing:.005em}
+button,.nav-item,.feature,.round-action,.code-chip{transition:transform .18s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+button:active,.nav-item:active,.feature:active{transform:scale(.965)}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.page,.room-page{gap:18px}
+.page-intro{margin-bottom:8px}
+.meeting-card,.feature,.empty-card,.settings-card,.recording-screen,.room-chat-panel,.participant-actions{border:1px solid var(--line)!important;box-shadow:0 12px 36px rgba(0,0,0,.17);backdrop-filter:blur(16px)}
+.feature{position:relative;overflow:hidden;border-radius:22px!important;padding:18px!important;min-height:112px;gap:9px!important;background:linear-gradient(145deg,rgba(24,43,72,.95),rgba(13,25,46,.92))!important}
+.feature:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(var(--cyan),var(--purple));opacity:.8}
+.feature:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(20,64,130,.2);border-color:rgba(103,232,249,.38)!important}
+.feature-icon,.settings-icon,.meeting-symbol{display:grid;place-items:center;border-radius:15px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.13);font-size:21px!important}
+.primary,.outline,.danger,.text-btn,.round-action,.code-chip{border-radius:15px!important;font-weight:750;letter-spacing:.01em}
+.primary{background:linear-gradient(135deg,#648cff,#8b7bff)!important;box-shadow:0 8px 22px rgba(100,140,255,.25)!important;border:1px solid rgba(255,255,255,.14)!important}
+.outline{background:rgba(255,255,255,.035)!important;border:1px solid var(--line)!important}
+.danger{box-shadow:0 8px 22px rgba(239,68,68,.12)}
+.nav-item{border-radius:16px!important}
+.nav-item span{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:rgba(130,160,220,.1)}
+.room-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px!important;padding:14px!important;border:1px solid var(--line);border-radius:24px;background:rgba(14,25,46,.84);box-shadow:0 16px 40px rgba(0,0,0,.2)}
+.room-tools button{min-width:0;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:10px 5px!important;border-radius:17px!important;background:linear-gradient(145deg,rgba(40,60,91,.7),rgba(17,31,54,.8))!important;border:1px solid rgba(174,198,239,.13)!important;color:#eaf2ff}
+.room-tools button span{width:34px;height:34px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,rgba(106,150,255,.25),rgba(129,105,255,.2));font-size:20px}
+.room-tools button small{font-size:11px;line-height:1.25;text-align:center}
+.room-tools button:hover{transform:translateY(-2px);border-color:rgba(103,232,249,.4)!important;background:linear-gradient(145deg,rgba(49,75,113,.85),rgba(24,40,68,.92))!important}
+.room-tools button.tool-off{background:rgba(140,52,68,.22)!important;border-color:rgba(248,113,113,.25)!important}
+.video-grid{gap:14px!important;padding:5px!important}
+.video-tile{border-radius:22px!important;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.28);border:1px solid rgba(190,210,255,.2)!important;animation:tile-arrive .38s cubic-bezier(.2,.8,.2,1) both}
+.video-tile video{object-fit:cover;background:#101a2d}
+.local-tile video{transform:scaleX(-1)}
+.tile-label{border-radius:12px!important;background:linear-gradient(90deg,rgba(4,10,23,.82),rgba(4,10,23,.38))!important;backdrop-filter:blur(8px);padding:8px 10px!important}
+.video-avatar{box-shadow:0 0 0 5px rgba(123,153,255,.09),0 10px 30px rgba(0,0,0,.22)}
+.meeting-card{border-radius:20px!important;padding:14px!important;margin-bottom:12px}
+input,textarea,select{border-radius:14px!important}
+.invite-dialog{border:1px solid var(--line)!important;border-radius:28px!important;background:linear-gradient(145deg,#172843,#0b1427)!important;box-shadow:0 25px 80px rgba(0,0,0,.5)!important;animation:dialog-enter .28s ease-out both}
+.invite-icon{border-radius:18px!important;background:linear-gradient(135deg,#678eff,#9d7bff)!important;box-shadow:0 12px 30px rgba(111,127,255,.25)}
+#toast{border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.35);backdrop-filter:blur(14px)}
+.recording-screen{border-radius:22px;overflow:hidden}
+.recording-screen video{display:block;width:100%;min-height:220px;background:#030712;object-fit:contain}
+.recording-player-page .player-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.room-chat-panel.chat-large{min-height:60vh}
+.meeting-focus-mode .room-top,.meeting-focus-mode .room-status,.meeting-focus-mode .room-notice{opacity:.35}
+.meeting-speaker-mode .video-tile:not(.spotlight-tile){opacity:.68;transform:scale(.985)}
+@keyframes tile-arrive{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dialog-enter{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(min-width:600px){.room-tools{grid-template-columns:repeat(6,minmax(0,1fr))}.page{max-width:820px;margin-inline:auto}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
