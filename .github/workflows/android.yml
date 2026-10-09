@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -96,4 +96,14 @@ jobs:
           name: IsraMeet-Android-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-# Trigger rebuild for the latest IsraMeet UI and media fixes.
+      - name: Prepare stable download filename
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk IsraMeet.apk
+      - name: Publish latest APK download
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: isrameet-build-${{ github.run_number }}
+          name: IsraMeet build ${{ github.run_number }}
+          body: Automated IsraMeet Android build. Download IsraMeet.apk to install the latest version.
+          files: IsraMeet.apk
+          make_latest: true
+# Every successful build publishes the APK at /releases/latest/download/IsraMeet.apk.
