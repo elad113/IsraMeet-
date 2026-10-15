@@ -155,7 +155,7 @@ function App() {
  const chooseActiveCourse = (name:string)=>{updateProfile({activeCourse:name});setShowCoursePicker(false);setLessonKey(null);setPhase('teach');};
  const translateLessonForUi=async(source:GeneratedLesson):Promise<GeneratedLesson>=>{
   if(chosenUi==='en')return source;
-  const locale=({he:'Hebrew',es:'Spanish',fr:'French',de:'German',pt:'Portuguese',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic'} as Record<string,string>)[profile.uiLanguage]||'English';
+  const locale=({he:'Hebrew',es:'Spanish',fr:'French',de:'German',pt:'Portuguese',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic'} as Record<string,string>)[chosenUi]||'English';
   try{
    const payload={title:source.title,concept:source.concept,explanation:source.explanation,breakdown:source.breakdown,tasks:source.tasks.map(task=>({type:task.type,prompt:task.prompt,options:task.options,answer:['choice','write','short'].includes(task.type)?task.answer:undefined,explanation:task.explanation,hint:task.hint}))};
    const response=await fetch('https://eureka-blocks-android.vercel.app/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'text',provider:'groq',system:'You are a precise software localization engine. Translate all human-readable text into '+locale+'. Return ONLY valid JSON matching the input structure. Do not add markdown or commentary. Preserve meaning, difficulty, numbering, and all programming terms. Never translate source code or programming keywords. Translate only the provided human-readable fields.',prompt:'Translate these lesson text fields into '+locale+'. Keep all keys and arrays exactly.\n'+JSON.stringify(payload)})});
