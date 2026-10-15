@@ -1,4 +1,4 @@
-name: Build CodeQuest APK
+name: Build CodeQuest APK from latest AppDeploy source
 on:
   workflow_dispatch:
   push:
@@ -17,14 +17,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install web dependencies
+      - name: Install website dependencies
         run: npm install
-      - name: Build actual CodeQuest website
+      - name: Build copied CodeQuest website
         run: npm run build
-      - name: Package website inside Android app
+      - name: Bundle website files into APK
         run: |
           mkdir -p app/src/main/assets/web
           cp -R dist/. app/src/main/assets/web/
+          test -s app/src/main/assets/web/index.html
+          find app/src/main/assets/web -type f -maxdepth 4
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
@@ -32,7 +34,7 @@ jobs:
         run: gradle --no-daemon assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: codequest-website-apk
+          name: codequest-fresh-appdeploy-copy-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14

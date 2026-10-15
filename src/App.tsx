@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { api } from '@appdeploy/client';
 import {
   ArrowLeft, ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, CircleHelp,
   Code2, Compass, Crown, Flame, Globe2, GraduationCap, Heart, Home, Lightbulb,
@@ -72,7 +73,7 @@ function Mascot({mood='happy',small=false}:{mood?:string;small?:boolean}) {
 }
 function App() {
  const [profile,setProfile] = useState<Profile>(()=>{try { const raw=localStorage.getItem('codequest-profile-v3'); return raw?{...defaults,...JSON.parse(raw)}:defaults; } catch { return defaults; }});
- const [profileId] = useState(()=>{try{let id=localStorage.getItem('codequest-profile-id');if(!id){id=makeKey();localStorage.setItem('codequest-profile-id',id);}return id;}catch{return makeKey();}});
+ const [profileId] = useState(()=>{let id=localStorage.getItem('codequest-profile-id');if(!id){id=makeKey();localStorage.setItem('codequest-profile-id',id);}return id;});
  const [onboardingStep,setOnboardingStep] = useState(1);
  const [chosenUi,setChosenUi] = useState('en');
  const [chosenCourses,setChosenCourses] = useState<string[]>([]);
@@ -111,9 +112,9 @@ function App() {
  const saveProfile = async (next:Profile) => {
   setProfile(next);
   try { localStorage.setItem('codequest-profile-v3',JSON.stringify(next)); } catch {}
-  setSyncStatus('local');
+  try { await api.put('/api/profile/'+encodeURIComponent(profileId),{profile:next}); setSyncStatus('synced'); } catch { setSyncStatus('local'); }
  };
- 
+ useEffect(()=>{let cancelled=false;(async()=>{try{const remote=await api.get('/api/profile/'+encodeURIComponent(profileId));if(!cancelled&&remote.data?.profile){const merged={...defaults,...remote.data.profile};const local=localStorage.getItem('codequest-profile-v3');if(!local||Object.keys(merged.completed||{}).length>=Object.keys(profile.completed).length){setProfile(merged);localStorage.setItem('codequest-profile-v3',JSON.stringify(merged));}}}catch{} })();return()=>{cancelled=true};},[]);
  useEffect(()=>{if(!profile.onboardingComplete){setChosenUi(profile.uiLanguage||'en');setChosenCourses(profile.courses||[]);setChosenExperience(profile.experience[profile.activeCourse]||'none');}},[]);
  useEffect(()=>{document.documentElement.lang=profile.uiLanguage;document.documentElement.dir=rtl?'rtl':'ltr';},[profile.uiLanguage,rtl]);
  const flash = (message:string)=>{setToast(message);window.setTimeout(()=>setToast(''),2400);};
@@ -135,7 +136,11 @@ function App() {
  const makeLesson = async (key:string)=>{
   setBusy(true);setLessonKey(key);setLesson(null);setPhase('teach');setTaskIndex(0);setResults([]);setTaskAnswer('');setSelectedOption('');setOrderedTokens([]);setUsedTokens([]);setHint('');setReviewMode(false);setActiveTab('lesson');
   const parts=key.split('|');const language=parts[0];const index=Number(parts[1]||0);const chapter=Math.floor(index/8);const title=lessonNames[index%8];
-  setLesson(initialLesson(language,profile.experience[language]||'none'));setBusy(false);
+  try{
+   const res=await api.post('/api/lesson/generate',{language,level:profile.experience[language]||'none',learnerName:profile.name,lessonNumber:index+1,chapter:chapter+1,chapterName:chapterNames[chapter%12],lessonName:title,previousScore:profile.lessonScores[key]??null,completedLessons:Object.keys(profile.completed).filter(k=>k.startsWith(language+'|')).length,review:reviewMode,uiLanguage:profile.uiLanguage});
+   if(res.data?.lesson?.tasks?.length){setLesson(res.data.lesson);setBusy(false);return;}
+   throw new Error('No lesson');
+  }catch{setLesson(initialLesson(language,profile.experience[language]||'none'));setBusy(false);}
  };
  const openLesson = (index:number)=>void makeLesson(profile.activeCourse+'|'+index);
  const resetTask = ()=>{setTaskAnswer('');setSelectedOption('');setOrderedTokens([]);setUsedTokens([]);setHint('');};
@@ -169,7 +174,7 @@ function App() {
  };
  const generateHint = async ()=>{
   if(!currentTask)return;setBusy(true);
-  setHint(currentTask.hint||currentTask.explanation||t('reviewText'));
+  try{const r=await api.post('/api/lesson/hint',{language:profile.activeCourse,task:currentTask,lessonTitle:lesson?.title,uiLanguage:profile.uiLanguage,learnerLevel:profile.experience[profile.activeCourse]||'none'});setHint(r.data?.hint||currentTask.hint||currentTask.explanation||t('reviewText'));}catch{setHint(currentTask.hint||currentTask.explanation||t('reviewText'));}
   setBusy(false);setMascotMood('thinking');
  };
  const navItems=[{id:'path',label:t('path'),icon:Home},{id:'practice',label:t('practice'),icon:Code2},{id:'quests',label:t('quests'),icon:Target},{id:'achievements',label:t('achievements'),icon:Trophy}];

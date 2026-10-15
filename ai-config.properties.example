@@ -1,6 +1,0 @@
-# Copy to ai-config.properties locally; never commit real keys.
-# Do not distribute an APK containing private API keys.
-GROQ_API_KEY=
-GEMINI_API_KEY=
-PRIMARY_PROVIDER=groq
-FALLBACK_PROVIDER=gemini
