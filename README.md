@@ -1,12 +1,8 @@
 # CodeQuest Android
+This repository packages the CodeQuest React website into an Android APK. The site is built with Vite and copied into Android assets, then loaded locally by WebView. No AppDeploy client is required at runtime for the currently ported local experience.
 
-Standalone Android project replacing the current contents of this repository. This is an initial APK-buildable shell, not yet a feature-complete port of the CodeQuest website.
+## Build
+GitHub Actions builds the web app and packages it into `codequest-website-apk`.
 
-## Build APK
-Push to `main` or run the **Build CodeQuest APK** workflow manually. Download the `codequest-debug-apk` artifact from the workflow run.
-
-## AI configuration and secrets
-Copy `ai-config.properties.example` to `ai-config.properties` for local development. This file is git-ignored. Never commit API keys or embed production keys in a distributed APK; APK contents can be extracted. For production AI, put Groq and Gemini keys on a backend you control. Configure Groq as primary and Gemini as fallback on that backend.
-
-## Porting status
-This commit establishes the Android shell and CI build pipeline. It does not yet port all CodeQuest web functionality, its lessons, AI orchestration, cloud sync, or AppDeploy-specific backend. Those require the original website source and replacement backend APIs.
+## Current limitations
+Profile progress is stored locally on the device. AI lesson generation and hints use the website's built-in local lesson fallback because the AppDeploy API dependency has been removed. Remote sync and Groq/Gemini are not connected yet.

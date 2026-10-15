@@ -1,3 +1,5 @@
+node_modules/
+dist/
 *.iml
 .gradle/
 .idea/
@@ -7,4 +9,3 @@ build/
 ai-config.properties
 *.jks
 *.keystore
-.DS_Store
