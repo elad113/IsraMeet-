@@ -1,7 +1,9 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {BookOpen,Plus,Paperclip,Send,PanelLeftClose,PanelLeftOpen,Sparkles,Brain,FileText,Trash2,Play,Check,ChevronRight,Code2,LoaderCircle} from 'lucide-react';
 import './codicher.css';
-const API_BASE=(import.meta.env.VITE_AI_API_BASE||'https://eureka-blocks-android.vercel.app').replace(/\/$/,'');\ndeclare global { interface Window { CodeQuestNative?: { postJson:(url:string,body:string)=>string } } }\nasync function aiPost(body:unknown){const url=API_BASE+'/api/ai';if(window.CodeQuestNative){const raw=window.CodeQuestNative.postJson(url,JSON.stringify(body));const data=JSON.parse(raw);if(!data.ok)throw new Error(data.error||'AI request failed');return data.payload;}const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'AI request failed');return data;}
+const API_BASE=(import.meta.env.VITE_AI_API_BASE||'https://eureka-blocks-android.vercel.app').replace(/\/$/,'');
+declare global { interface Window { CodeQuestNative?: { postJson:(url:string,body:string)=>string } } }
+async function aiPost(body:unknown){const url=API_BASE+'/api/ai';if(window.CodeQuestNative){const raw=window.CodeQuestNative.postJson(url,JSON.stringify(body));const data=JSON.parse(raw);if(!data.ok)throw new Error(data.error||'AI request failed');return data.payload;}const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'AI request failed');return data;}
 
 type Message={role:'user'|'assistant';content:string;provider?:string;kind?:'quiz';options?:string[];correct?:number;chosen?:number;checked?:boolean};
 type Lesson={id:string;title:string;updated:number;messages:Message[]};
