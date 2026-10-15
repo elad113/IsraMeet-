@@ -3,7 +3,17 @@ package com.codequest.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.graphics.Color;
-import android.net.Uri;\nimport android.content.Intent;\nimport android.webkit.ValueCallback;\nimport android.webkit.JavascriptInterface;\nimport java.io.BufferedReader;\nimport java.io.InputStream;\nimport java.io.InputStreamReader;\nimport java.io.OutputStream;\nimport java.net.HttpURLConnection;\nimport java.net.URL;\nimport org.json.JSONObject;
+import android.net.Uri;
+import android.content.Intent;
+import android.webkit.ValueCallback;
+import android.webkit.JavascriptInterface;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONObject;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -16,14 +26,17 @@ import android.widget.TextView;
 import androidx.webkit.WebViewAssetLoader;
 
 public class MainActivity extends Activity {
-  private WebView view;\n  private ValueCallback<Uri[]> filePathCallback;\n  private static final int FILE_CHOOSER_REQUEST = 4312;
+  private WebView view;
+  private ValueCallback<Uri[]> filePathCallback;
+  private static final int FILE_CHOOSER_REQUEST = 4312;
   private WebViewAssetLoader assetLoader;
   @Override public void onCreate(Bundle state) {
     super.onCreate(state);
     assetLoader = new WebViewAssetLoader.Builder().addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this)).build();
     view = new WebView(this);
     WebSettings settings = view.getSettings();
-    settings.setJavaScriptEnabled(true);\n    view.addJavascriptInterface(new AiBridge(), "CodeQuestNative");
+    settings.setJavaScriptEnabled(true);
+    view.addJavascriptInterface(new AiBridge(), "CodeQuestNative");
     settings.setDomStorageEnabled(true);
     settings.setAllowFileAccess(false);
     settings.setAllowContentAccess(true);
@@ -42,7 +55,13 @@ public class MainActivity extends Activity {
       }
     });
     view.setWebChromeClient(new WebChromeClient() {
-      @Override public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> callback, FileChooserParams params) {\n        if (filePathCallback != null) filePathCallback.onReceiveValue(null);\n        filePathCallback = callback;\n        Intent intent = params.createIntent();\n        try { startActivityForResult(intent, FILE_CHOOSER_REQUEST); return true; } catch (Exception e) { filePathCallback = null; return false; }\n      }\n      @Override public boolean onConsoleMessage(ConsoleMessage message) {
+      @Override public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> callback, FileChooserParams params) {
+        if (filePathCallback != null) filePathCallback.onReceiveValue(null);
+        filePathCallback = callback;
+        Intent intent = params.createIntent();
+        try { startActivityForResult(intent, FILE_CHOOSER_REQUEST); return true; } catch (Exception e) { filePathCallback = null; return false; }
+      }
+      @Override public boolean onConsoleMessage(ConsoleMessage message) {
         android.util.Log.e("CodeQuestWeb", message.message() + " at " + message.sourceId() + ":" + message.lineNumber());
         return true;
       }
@@ -50,7 +69,28 @@ public class MainActivity extends Activity {
     setContentView(view);
     view.loadUrl("https://appassets.androidplatform.net/assets/web/index.html");
   }
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {\n    super.onActivityResult(requestCode, resultCode, data);\n    if (requestCode == FILE_CHOOSER_REQUEST && filePathCallback != null) {\n      Uri[] results = WebChromeClient.FileChooserParams.parseResult(resultCode, data);\n      filePathCallback.onReceiveValue(results); filePathCallback = null;\n    }\n  }\n  private class AiBridge {\n    @JavascriptInterface public String postJson(String endpoint, String body) {\n      HttpURLConnection connection = null;\n      try {\n        Uri uri = Uri.parse(endpoint);\n        if (!"https".equals(uri.getScheme()) || !"eureka-blocks-android.vercel.app".equals(uri.getHost()) || !"/api/ai".equals(uri.getPath())) return new JSONObject().put("ok", false).put("error", "AI endpoint not allowed").toString();\n        connection = (HttpURLConnection) new URL(endpoint).openConnection(); connection.setRequestMethod("POST"); connection.setConnectTimeout(20000); connection.setReadTimeout(60000); connection.setDoOutput(true); connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");\n        try (OutputStream os = connection.getOutputStream()) { os.write(body.getBytes(java.nio.charset.StandardCharsets.UTF_8)); }\n        int status = connection.getResponseCode(); InputStream stream = status >= 200 && status < 400 ? connection.getInputStream() : connection.getErrorStream();\n        StringBuilder result = new StringBuilder(); try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, java.nio.charset.StandardCharsets.UTF_8))) { String line; while ((line = reader.readLine()) != null) result.append(line); }\n        JSONObject output = new JSONObject(); output.put("ok", status >= 200 && status < 300); output.put("payload", new JSONObject(result.toString())); if (status < 200 || status >= 300) output.put("error", "AI server returned HTTP " + status); return output.toString();\n      } catch (Exception e) { try { return new JSONObject().put("ok", false).put("error", "AI network error: " + e.getMessage()).toString(); } catch (Exception ignored) { return "{\\\"ok\\\":false}"; } } finally { if (connection != null) connection.disconnect(); }\n    }\n  }\n  private void showError(String title, String detail) {
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == FILE_CHOOSER_REQUEST && filePathCallback != null) {
+      Uri[] results = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+      filePathCallback.onReceiveValue(results); filePathCallback = null;
+    }
+  }
+  private class AiBridge {
+    @JavascriptInterface public String postJson(String endpoint, String body) {
+      HttpURLConnection connection = null;
+      try {
+        Uri uri = Uri.parse(endpoint);
+        if (!"https".equals(uri.getScheme()) || !"eureka-blocks-android.vercel.app".equals(uri.getHost()) || !"/api/ai".equals(uri.getPath())) return new JSONObject().put("ok", false).put("error", "AI endpoint not allowed").toString();
+        connection = (HttpURLConnection) new URL(endpoint).openConnection(); connection.setRequestMethod("POST"); connection.setConnectTimeout(20000); connection.setReadTimeout(60000); connection.setDoOutput(true); connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        try (OutputStream os = connection.getOutputStream()) { os.write(body.getBytes(java.nio.charset.StandardCharsets.UTF_8)); }
+        int status = connection.getResponseCode(); InputStream stream = status >= 200 && status < 400 ? connection.getInputStream() : connection.getErrorStream();
+        StringBuilder result = new StringBuilder(); try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, java.nio.charset.StandardCharsets.UTF_8))) { String line; while ((line = reader.readLine()) != null) result.append(line); }
+        JSONObject output = new JSONObject(); output.put("ok", status >= 200 && status < 300); output.put("payload", new JSONObject(result.toString())); if (status < 200 || status >= 300) output.put("error", "AI server returned HTTP " + status); return output.toString();
+      } catch (Exception e) { try { return new JSONObject().put("ok", false).put("error", "AI network error: " + e.getMessage()).toString(); } catch (Exception ignored) { return "{\\\"ok\\\":false}"; } } finally { if (connection != null) connection.disconnect(); }
+    }
+  }
+  private void showError(String title, String detail) {
     runOnUiThread(() -> {
       LinearLayout panel = new LinearLayout(this);
       panel.setOrientation(LinearLayout.VERTICAL);
