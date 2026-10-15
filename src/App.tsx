@@ -73,7 +73,7 @@ function Mascot({mood='happy',small=false}:{mood?:string;small?:boolean}) {
  </div>;
 }
 function App() {
- const [profile,setProfile] = useState<Profile>(()=>{try { const raw=localStorage.getItem('codequest-profile-v3'); if(!raw)return defaults; const saved=JSON.parse(raw); if(!saved||typeof saved!=='object')return defaults; return {...defaults,...saved,courses:Array.isArray(saved.courses)?saved.courses:[],experience:saved.experience&&typeof saved.experience==='object'?saved.experience:{},completed:saved.completed&&typeof saved.completed==='object'?saved.completed:{},lessonScores:saved.lessonScores&&typeof saved.lessonScores==='object'?saved.lessonScores:{},xp:Number.isFinite(saved.xp)?saved.xp:0,streak:Number.isFinite(saved.streak)?saved.streak:0,hearts:Number.isFinite(saved.hearts)?saved.hearts:5,dailyGoal:Number.isFinite(saved.dailyGoal)?saved.dailyGoal:1,uiLanguage:typeof saved.uiLanguage==='string'?saved.uiLanguage:'en',name:typeof saved.name==='string'?saved.name:'',activeCourse:typeof saved.activeCourse==='string'?saved.activeCourse:'Python',onboardingComplete:!!saved.onboardingComplete}; } catch { return defaults; }});
+ const [profile,setProfile] = useState<Profile>(()=>{try { const raw=localStorage.getItem('codequest-profile-v3'); return raw?{...defaults,...JSON.parse(raw)}:defaults; } catch { return defaults; }});
  const [profileId] = useState(()=>{let id=localStorage.getItem('codequest-profile-id');if(!id){id=makeKey();localStorage.setItem('codequest-profile-id',id);}return id;});
  const [onboardingStep,setOnboardingStep] = useState(1);
  const [chosenUi,setChosenUi] = useState(()=>{try{return JSON.parse(localStorage.getItem('codequest-profile-v3')||'{}').uiLanguage||'en'}catch{return 'en'}});
