@@ -1,7 +1,7 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {BookOpen,Plus,Paperclip,Send,PanelLeftClose,PanelLeftOpen,Sparkles,Brain,FileText,Trash2,Play,Check,ChevronRight,Code2,LoaderCircle} from 'lucide-react';
 import './codicher.css';
-const API_BASE=(import.meta as any).env?.VITE_API_BASE_URL||'';
+const API_BASE='https://eureka-blocks-android.vercel.app';
 
 type Message={role:'user'|'assistant';content:string;provider?:string;kind?:'quiz';options?:string[];correct?:number;chosen?:number;checked?:boolean};
 type Lesson={id:string;title:string;updated:number;messages:Message[]};
@@ -25,7 +25,7 @@ export default function Codicher(){
  const send=async(text=draft)=>{if(!text.trim()||busy)return;let current=lesson;if(!current){const l={id:makeId(),title:text.trim().slice(0,34),updated:Date.now(),messages:[] as Message[]};setLessons(p=>[l,...p]);setActive(l.id);current=l;}
  const user:Message={role:'user',content:text.trim()};const msgs=[...current.messages,user];const title=current.title==='New lesson'?text.trim().slice(0,34):current.title;
  setLessons(p=>p.some(l=>l.id===current!.id)?p.map(l=>l.id===current!.id?{...l,title,updated:Date.now(),messages:msgs}:l):[{...current!,title,updated:Date.now(),messages:msgs}]);setDraft('');setBusy(true);
- try{const r=await fetch(API_BASE+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:msgs.map(m=>({role:m.role,content:m.content})),language,files})});const j=await r.json();if(!r.ok)throw new Error(j.error||'AI service unavailable');update(current.id,l=>({...l,updated:Date.now(),messages:[...l.messages,{role:'assistant',content:j.answer,provider:j.provider}]}));}
+ try{const r=await fetch(API_BASE+'/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'text',provider:'groq',system:'You are Codicher, a patient programming tutor. Teach from first principles. Current language: '+language+'. Attached context: '+JSON.stringify(files).slice(0,12000),prompt:msgs.map(m=>(m.role==='assistant'?'Tutor: ':'Learner: ')+m.content).join('\n\n')})});const j=await r.json();if(!r.ok)throw new Error(j.error||'AI service unavailable');update(current.id,l=>({...l,updated:Date.now(),messages:[...l.messages,{role:'assistant',content:j.text,provider:j.provider}]}));}
  catch(e:any){update(current.id,l=>({...l,updated:Date.now(),messages:[...l.messages,{role:'assistant',content:'I could not reach the AI service yet. Check that GROQ_API_KEY and GEMINI_API_KEY are configured as server-side environment variables.\n\n'+(e?.message||'Request failed') }]}));}
  finally{setBusy(false);}
  };
