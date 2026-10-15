@@ -1,7 +1,0 @@
-{
-  "appId": "com.isrameet.app",
-  "appName": "IsraMeet",
-  "webDir": "dist",
-  "bundledWebRuntime": false,
-  "android": { "allowMixedContent": false }
-}
