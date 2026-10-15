@@ -3,12 +3,6 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - 'app/**'
-      - '*.gradle'
-      - 'settings.gradle'
-      - 'gradle.properties'
-      - '.github/workflows/build-apk.yml'
 permissions:
   contents: read
 jobs:
