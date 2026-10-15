@@ -140,14 +140,26 @@ function App() {
   await saveProfile(next);setShowCoursePicker(false);flash(t('progressSaved'));
  };
  const chooseActiveCourse = (name:string)=>{updateProfile({activeCourse:name});setShowCoursePicker(false);setLessonKey(null);setPhase('teach');};
+ const translateLessonForUi=async(source:GeneratedLesson):Promise<GeneratedLesson>=>{
+  if(profile.uiLanguage==='en')return source;
+  const locale=({he:'Hebrew',es:'Spanish',fr:'French',de:'German',pt:'Portuguese',it:'Italian',ja:'Japanese',ko:'Korean',ar:'Arabic'} as Record<string,string>)[profile.uiLanguage]||'English';
+  try{
+   const payload={title:source.title,concept:source.concept,explanation:source.explanation,breakdown:source.breakdown,tasks:source.tasks.map(task=>({type:task.type,prompt:task.prompt,options:task.options,explanation:task.explanation,hint:task.hint}))};
+   const response=await fetch('https://eureka-blocks-android.vercel.app/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'text',provider:'groq',system:'You are a precise software localization engine. Translate all human-readable text into '+locale+'. Return ONLY valid JSON matching the input structure. Do not add markdown or commentary. Preserve meaning, difficulty, numbering, and all programming terms. Never translate source code or programming keywords. Translate only the provided human-readable fields.',prompt:'Translate these lesson text fields into '+locale+'. Keep all keys and arrays exactly.\n'+JSON.stringify(payload)})});
+   const data=await response.json();if(!response.ok||!data.text)throw new Error('Translation unavailable');
+   const raw=String(data.text).replace(/^\s*```(?:json)?\s*/i,'').replace(/\s*```\s*$/,'');
+   const translated=JSON.parse(raw);
+   return {...source,title:translated.title||source.title,concept:translated.concept||source.concept,explanation:translated.explanation||source.explanation,breakdown:Array.isArray(translated.breakdown)?translated.breakdown:source.breakdown,tasks:source.tasks.map((task,i)=>({...task,prompt:translated.tasks?.[i]?.prompt||task.prompt,options:translated.tasks?.[i]?.options||task.options,explanation:translated.tasks?.[i]?.explanation||task.explanation,hint:translated.tasks?.[i]?.hint||task.hint}))};
+  }catch{return source;}
+ };
  const makeLesson = async (key:string)=>{
   setBusy(true);setLessonKey(key);setLesson(null);setPhase('teach');setTaskIndex(0);setResults([]);setTaskAnswer('');setSelectedOption('');setOrderedTokens([]);setUsedTokens([]);setHint('');setReviewMode(false);setActiveTab('lesson');
   const parts=key.split('|');const language=parts[0];const index=Number(parts[1]||0);const chapter=Math.floor(index/8);const title=lessonNames[index%8];
   try{
    const res=await api.post('/api/lesson/generate',{language,level:profile.experience[language]||'none',learnerName:profile.name,lessonNumber:index+1,chapter:chapter+1,chapterName:chapterNames[chapter%12],lessonName:title,previousScore:profile.lessonScores[key]??null,completedLessons:Object.keys(profile.completed).filter(k=>k.startsWith(language+'|')).length,review:reviewMode,uiLanguage:profile.uiLanguage});
-   if(res.data?.lesson?.tasks?.length){setLesson(res.data.lesson);setBusy(false);return;}
+   if(res.data?.lesson?.tasks?.length){const localized=await translateLessonForUi(res.data.lesson);setLesson(localized);setBusy(false);return;}
    throw new Error('No lesson');
-  }catch{setLesson(initialLesson(language,profile.experience[language]||'none'));setBusy(false);}
+  }catch{const fallback=initialLesson(language,profile.experience[language]||'none');setLesson(await translateLessonForUi(fallback));setBusy(false);}
  };
  const openLesson = (index:number)=>void makeLesson(profile.activeCourse+'|'+index);
  const resetTask = ()=>{setTaskAnswer('');setSelectedOption('');setOrderedTokens([]);setUsedTokens([]);setHint('');};
