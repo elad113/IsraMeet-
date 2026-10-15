@@ -104,6 +104,7 @@ function App() {
  const [practiceOutput,setPracticeOutput] = useState('');
  const t = (key:string) => (copy[profile.uiLanguage]||copy.en)[key] || copy.en[key] || key;
  const rtl = (uiLanguages.find(l=>l.code===profile.uiLanguage)?.dir==='rtl');
+ useEffect(()=>{const track=()=>{const nodes=Array.from(document.querySelectorAll<HTMLElement>('.map-district'));let current=0;nodes.forEach((node,i)=>{if(node.getBoundingClientRect().top<220)current=i;});setVisibleChapter(current);};window.addEventListener('scroll',track,{passive:true});track();return()=>window.removeEventListener('scroll',track);},[activeTab,activeCourse.name,completedCount]);
  const activeCourse = courses.find(c=>c.name===profile.activeCourse)||courses[0];
  const totalLessons = 96;
  const completedCount = Object.keys(profile.completed).filter(k=>k.startsWith(profile.activeCourse+'|')).length;
