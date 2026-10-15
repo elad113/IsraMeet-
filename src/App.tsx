@@ -72,7 +72,7 @@ function Mascot({mood='happy',small=false}:{mood?:string;small?:boolean}) {
 }
 function App() {
  const [profile,setProfile] = useState<Profile>(()=>{try { const raw=localStorage.getItem('codequest-profile-v3'); return raw?{...defaults,...JSON.parse(raw)}:defaults; } catch { return defaults; }});
- const [profileId] = useState(()=>{let id=localStorage.getItem('codequest-profile-id');if(!id){id=makeKey();localStorage.setItem('codequest-profile-id',id);}return id;});
+ const [profileId] = useState(()=>{try{let id=localStorage.getItem('codequest-profile-id');if(!id){id=makeKey();localStorage.setItem('codequest-profile-id',id);}return id;}catch{return makeKey();}});
  const [onboardingStep,setOnboardingStep] = useState(1);
  const [chosenUi,setChosenUi] = useState('en');
  const [chosenCourses,setChosenCourses] = useState<string[]>([]);
